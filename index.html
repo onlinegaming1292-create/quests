@@ -3,6 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>URL Masker</title>
+    <!-- الكود بيتنفذ هنا في الـ head قبل ما المتصفح يرسم أي حاجة من الـ body -->
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const encodedUrl = params.get('url');
+
+        if (encodedUrl) {
+            try {
+                const originalUrl = atob(encodedUrl);
+                if (originalUrl.startsWith('http://') || originalUrl.startsWith('https://')) {
+                    window.location.replace(originalUrl);
+                } else {
+                    document.write('الرابط الأصلي مش صحيح!');
+                }
+            } catch (e) {
+                document.write('حصل خطأ في فك التشفير!');
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- واجهة صنع اللينكات - هتظهر بس لو الدخل ماكانش فيه رابط مشفر (url?=) -->
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f4f4f4; }
         .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
@@ -11,8 +32,6 @@
         button:hover { background: #0056b3; }
         #result { word-wrap: break-word; background: #e9ecef; padding: 10px; border-radius: 5px; display: none; }
     </style>
-</head>
-<body>
     <div class="box">
         <h2>مخفي الروابط 🎭</h2>
         <input type="text" id="originalUrl" placeholder="حط الرابط الأصلي هنا (https://...)">
@@ -24,24 +43,7 @@
     </div>
 
     <script>
-        // جزء التحويل لو فيه رابط مشفر
-        const params = new URLSearchParams(window.location.search);
-        const encodedUrl = params.get('url');
-
-        if (encodedUrl) {
-            try {
-                const originalUrl = atob(encodedUrl);
-                if (originalUrl.startsWith('http')) {
-                    window.location.replace(originalUrl);
-                } else {
-                    document.write('الرابط الأصلي مش صحيح!');
-                }
-            } catch (e) {
-                document.write('حصل خطأ في فك التشفير!');
-            }
-        }
-
-        // جزء صنع اللينك المخفي
+        // جزء صنع اللينك المخفي فقط
         function generateLink() {
             const urlInput = document.getElementById('originalUrl').value;
             if (!urlInput.startsWith('http')) {

@@ -2,25 +2,59 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Redirecting...</title>
+    <title>URL Masker</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        input, button { padding: 10px; margin: 10px; width: 80%; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #007bff; color: white; cursor: pointer; border: none; }
+        button:hover { background: #0056b3; }
+        #result { word-wrap: break-word; background: #e9ecef; padding: 10px; border-radius: 5px; display: none; }
+    </style>
 </head>
 <body>
-<script>
-var path = window.location.pathname.substring(1);
-if (path) {
-    try {
-        var originalUrl = atob(path);
-        if (originalUrl.startsWith('http')) {
-            window.location.replace(originalUrl);
-        } else {
-            document.write('Invalid URL');
+    <div class="box">
+        <h2>مخفي الروابط 🎭</h2>
+        <input type="text" id="originalUrl" placeholder="حط الرابط الأصلي هنا (https://...)">
+        <button onclick="generateLink()">اصنع اللينك المخفي</button>
+        <div id="result">
+            <p>انسخ اللينك ده:</p>
+            <strong id="maskedLink"></strong>
+        </div>
+    </div>
+
+    <script>
+        // جزء التحويل لو فيه رابط مشفر
+        const params = new URLSearchParams(window.location.search);
+        const encodedUrl = params.get('url');
+
+        if (encodedUrl) {
+            try {
+                const originalUrl = atob(encodedUrl);
+                if (originalUrl.startsWith('http')) {
+                    window.location.replace(originalUrl);
+                } else {
+                    document.write('الرابط الأصلي مش صحيح!');
+                }
+            } catch (e) {
+                document.write('حصل خطأ في فك التشفير!');
+            }
         }
-    } catch (e) {
-        document.write('Error decoding');
-    }
-} else {
-    document.write('Welcome to my URL Masker');
-}
-</script>
+
+        // جزء صنع اللينك المخفي
+        function generateLink() {
+            const urlInput = document.getElementById('originalUrl').value;
+            if (!urlInput.startsWith('http')) {
+                alert('لازم الرابط يبدأ بـ http:// أو https://');
+                return;
+            }
+            const encoded = btoa(urlInput);
+            const currentDomain = window.location.origin + window.location.pathname;
+            const finalLink = currentDomain + '?url=' + encoded;
+            
+            document.getElementById('maskedLink').innerText = finalLink;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

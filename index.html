@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>URL Masker</title>
+</head>
+<body>
+    <p>جاري التحويل...</p>
+    <script>
+        const path = window.location.pathname.substring(1);
+        if (path) {
+            try {
+                const decodedUrl = atob(path);
+                if (decodedUrl.startsWith('http://') || decodedUrl.startsWith('https://')) {
+                    window.location.href = decodedUrl;
+                } else {
+                    document.body.innerHTML = "<h1>رابط غير صالح!</h1>";
+                }
+            } catch (e) {
+                document.body.innerHTML = "<h1>خطأ في فك التشفير!</h1>";
+            }
+        } else {
+            document.body.innerHTML = "<h1>مرحباً بك في مخفي الروابط!</h1>";
+        }
+    </script>
+</body>
+</html>
